@@ -1,0 +1,4 @@
+.git/*
+.vs/*
+!minio-webhook/bin/Release/netcoreapp3.0/publish
+minio-webhook/*

@@ -338,3 +338,14 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Do not commit production appsettings
+**/appsettings.production.json
+
+# Minio Assets except config.json
+.docker/assets/*
+!.docker/assets/.minio.sys
+.docker/assets/.minio.sys/*
+!.docker/assets/.minio.sys/config
+.docker/assets/.minio.sys/config/*
+!.docker/assets/.minio.sys/config/config.json

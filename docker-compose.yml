@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+    webhooks:
+        build: .
+        container_name: webhooks
+        restart: always
+        volumes:
+          - ./minio-webhook/bin/Release/netcoreapp3.0/publish:/app
+        environment:
+            # Remove before production
+            ASPNETCORE_ENVIRONMENT: "Development" 
+    assets:
+        image: minio/minio
+        container_name: assets
+        command: server /data
+        restart: always
+        environment:
+          MINIO_ACCESS_KEY: "devkey"
+          MINIO_SECRET_KEY: "devsecret"
+        volumes:
+            - ./.docker/assets:/data
+        ports:
+            - "9001:9000"   
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            interval: 1m30s
+            timeout: 20s
+            retries: 3
+            start_period: 3m
