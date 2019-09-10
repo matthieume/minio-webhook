@@ -63,7 +63,7 @@ namespace minio_webhook.Services.Webhooks
                         await minio.Client.GetObjectAsync(
                             record.S3.Bucket.Name,
                             System.Web.HttpUtility.UrlDecode(record.S3.Object.Key),
-                            (stream) => stream.CopyTo(memoryStream)).ConfigureAwait(false);
+                            (stream) => stream.CopyTo(memoryStream));
                         source = MediaService.GetBipmapFromStream(memoryStream);
                     }
 
@@ -84,13 +84,13 @@ namespace minio_webhook.Services.Webhooks
                                     memoryStream,
                                     -1,
                                     mimeType,
-                                    metaData: record.S3.Object.UserMetadata)
-                                    .ConfigureAwait(false);
+                                    metaData: record.S3.Object.UserMetadata);
                             }
                         }
                         catch (Exception e)
                         {
                             Debug.WriteLine(e.Message);
+                            throw;
                         }
                     }
                 }
@@ -102,7 +102,7 @@ namespace minio_webhook.Services.Webhooks
                     {
                         if (Regex.IsMatch(item.Key, fileName + @"_\d+\." + ext + "$"))
                         {
-                            await minio.Client.RemoveObjectAsync("img", System.Web.HttpUtility.UrlDecode(item.Key)).ConfigureAwait(false);
+                            await minio.Client.RemoveObjectAsync("img", System.Web.HttpUtility.UrlDecode(item.Key));
                         }
                     });
                 }

@@ -349,3 +349,7 @@ healthchecksdb
 !.docker/assets/.minio.sys/config
 .docker/assets/.minio.sys/config/*
 !.docker/assets/.minio.sys/config/config.json
+
+# Hangfire LiteDB
+Hangfire.db
+Hangfire-journal.db

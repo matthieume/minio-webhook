@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Hangfire;
 
 namespace minio_webhook.Controllers
 {
@@ -22,7 +23,7 @@ namespace minio_webhook.Controllers
         [HttpGet]
         public async Task InitAsync()
         {
-            await _minio.CheckBucketRegistration().ConfigureAwait(false);
+            await _minio.CheckBucketRegistration();
 
             Ok("Buckets registred");
         }
@@ -32,13 +33,13 @@ namespace minio_webhook.Controllers
         {
             try
             {
-                await _minio.CheckBucketRegistration().ConfigureAwait(false);
+                await _minio.CheckBucketRegistration();
 
-                var bucketNotificationPost = await JsonSerializer.DeserializeAsync<BucketNotificationPost>(Request.Body).ConfigureAwait(false);
+                var bucketNotificationPost = await JsonSerializer.DeserializeAsync<BucketNotificationPost>(Request.Body);
 
                 if (bucketNotificationPost != null)
                 {
-                    _minio.Process(bucketNotificationPost);
+                    BackgroundJob.Enqueue(() => _minio.ProcessAsync(bucketNotificationPost));
                 }
                 Ok("");
             }

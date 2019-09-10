@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Hangfire;
+using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel;
 using minio_webhook.Models;
@@ -87,22 +88,24 @@ namespace minio_webhook.Services.Minio
             }
         }
 
-        public void Process(BucketNotificationPost bucketNotificationPost)
+        [AutomaticRetry(Attempts = 5)]
+        public async Task ProcessAsync(BucketNotificationPost bucketNotificationPost)
         {
-            bucketNotificationPost.Records.ToList().ForEach(record =>
+            foreach (var record in bucketNotificationPost.Records)
             {
-                _webhooks.ToList().ForEach(async t =>
+                foreach (var t in _webhooks)
                 {
                     try
                     {
-                        await t.ProcessAsync(this, record).ConfigureAwait(false);
+                        await t.ProcessAsync(this, record);
                     }
                     catch (Exception e)
                     {
                         System.Diagnostics.Debug.WriteLine(e.Message, e.StackTrace);
+                        throw; // throw it again so the Task runner will try to replay it.
                     }
-                });
-            });
+                }
+            }
         }
     }
 }

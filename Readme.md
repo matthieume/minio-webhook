@@ -10,6 +10,8 @@ Clone project and run
 docker-compose up -d
 ```
 
+Task queue dashboard is available here http://localhost:9002/hangfire 
+
 ## Configuration
 Update `appsettings.json` according to you needs:
 

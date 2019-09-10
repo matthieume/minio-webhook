@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Hangfire;
+using Hangfire.LiteDB;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,8 @@ namespace minio_webhook
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddHealthChecks();
 
+            services.AddHangfire(x => x.UseLiteDbStorage());
+
             services.Configure<MinioSettings>(Configuration.GetSection("MinioSettings"));
             services.AddSingleton<Services.Minio.Minio>();
 
@@ -40,6 +44,16 @@ namespace minio_webhook
             }
 
             app.UseRouting();
+
+            app.UseHangfireServer(new BackgroundJobServerOptions()
+            {
+                WorkerCount = 1
+            });
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new Hangfire.Dashboard.IDashboardAuthorizationFilter[] { } // All access from everywere to dashbord (usefull for docker usage)
+            });
 
             app.UseEndpoints(endpoints =>
             {

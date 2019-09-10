@@ -5,6 +5,8 @@ services:
         build: .
         container_name: webhooks
         restart: always
+        ports:
+            - "9002:80"  
         volumes:
           - ./minio-webhook/bin/Release/netcoreapp3.0/publish:/app
         environment:
