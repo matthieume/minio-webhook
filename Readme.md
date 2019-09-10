@@ -1,8 +1,8 @@
 # Minio-Webhook
 
-Minio-Webhook is a platform to manage you [Minio](https://min.io/)'s webhooks.
+Minio-Webhook is a platform to manage your [Minio](https://min.io/)'s webhooks.
 
-Current version is providing thumbnail generation.
+The current version is providing thumbnail generation.
 
 ## Quick start
 Clone project and run
