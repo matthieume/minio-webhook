@@ -7,6 +7,7 @@ The current version is providing thumbnail generation.
 ## Quick start
 Clone project and run
 ```sh
+dotnet publish -c Release
 docker-compose up -d
 ```
 
