@@ -340,7 +340,7 @@ ASALocalRun/
 healthchecksdb
 
 # Do not commit production appsettings
-**/appsettings.production.json
+**/appsettings.Production.json
 
 # Minio Assets except config.json
 .docker/assets/*

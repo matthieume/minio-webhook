@@ -20,21 +20,11 @@ namespace minio_webhook.Controllers
             _minio = minio;
         }
 
-        [HttpGet]
-        public async Task InitAsync()
-        {
-            await _minio.CheckBucketRegistration();
-
-            Ok("Buckets registred");
-        }
-
         [HttpPost]
         public async Task PostAsync()
         {
             try
             {
-                await _minio.CheckBucketRegistration();
-
                 var bucketNotificationPost = await JsonSerializer.DeserializeAsync<BucketNotificationPost>(Request.Body);
 
                 if (bucketNotificationPost != null)
